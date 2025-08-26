@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>StudioPinVice Portfolio</title>
-  <!-- Pretendard 폰트 CDN -->
+  <!-- Pretendard CDN 및 다양한 구글 폰트 추가 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/pretendard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&family=Nanum+Gothic:wght@700&family=Oswald:wght@700&family=Montserrat:wght@700&family=Pacifico&family=Orbitron:wght@700&family=Russo+One&family=Concert+One&family=Indie+Flower&family=Rubik:wght@700&family=Yatra+One&family=Luckiest+Guy&family=Anton&family=Quicksand:wght@700&family=Jua&family=Do+Hyeon&family=Gothic+A1:wght@700&family=Lobster&family=Bebas+Neue&family=Dongle:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
       height: 100vh;
@@ -12,23 +13,39 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      /* 배경 이미지 적용 */
-      background: url('https://raw.githubusercontent.com/StudioPinVice/StudioPinVice-/main/images/0.jpg') no-repeat center center fixed;
-      background-size: cover;
+      background: #fff;
       font-family: 'Pretendard', Arial, sans-serif;
     }
     .center-text {
       text-align: center;
       font-size: 2em;
       font-weight: bold;
-      color: white;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.6); /* 글자가 잘 보이게 그림자 효과 */
+      color: #222;
+    }
+    .star {
+      display: inline-block;
+      transition: font-family 0.3s;
     }
   </style>
 </head>
 <body>
   <div class="center-text">
-    The Portfolio Page of StudioPinVice* is Under Construction
+    The Portfolio Page of StudioPinVice<span class="star">*</span> is Under Construction
   </div>
+  <script>
+    // 사용할 폰트 리스트 (20가지)
+    const fonts = [
+      'Pretendard', 'Roboto', 'Nanum Gothic', 'Oswald', 'Montserrat',
+      'Pacifico', 'Orbitron', 'Russo One', 'Concert One', 'Indie Flower',
+      'Rubik', 'Yatra One', 'Luckiest Guy', 'Anton', 'Quicksand',
+      'Jua', 'Do Hyeon', 'Gothic A1', 'Lobster', 'Bebas Neue', 'Dongle'
+    ];
+    let idx = 0;
+    const star = document.querySelector('.star');
+    setInterval(() => {
+      star.style.fontFamily = `'${fonts[idx % fonts.length]}', Arial, sans-serif`;
+      idx++;
+    }, 500);
+  </script>
 </body>
 </html>
