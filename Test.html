@@ -1,129 +1,1349 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { PROJECTS } from './constants';
-import { MenuCategory, Project } from './types';
-import Sidebar from './components/Sidebar';
-
-const App: React.FC = () => {
-  const [currentCategory, setCurrentCategory] = useState<MenuCategory>('WORK');
-  const [activeProjectId, setActiveProjectId] = useState<string | null>(PROJECTS[0].id);
-  const [activeProject, setActiveProject] = useState<Project | null>(PROJECTS[0]);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const designLabImages = [
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam5.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam00.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam1.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam2.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam3.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam4.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam6.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam7.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam8.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam9.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam10.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam11.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam12.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam13.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam14.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam15.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam16.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam17.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam18.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam19.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam20.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam21.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam22.jpg',
-    'https://raw.githubusercontent.com/StudioPinVice/StudioPinVice/main/1-5Hannam23.jpg'
-  ];
-
-  useEffect(() => {
-    if (activeProjectId) {
-      const project = PROJECTS.find(p => p.id === activeProjectId);
-      if (project) {
-        setActiveProject(project);
-        if (scrollContainerRef.current) {
-          scrollContainerRef.current.scrollTop = 0;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudioPinVice* Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        :root {
+            --edge-gap: 0.7vw; /* spacing equal to screen border - responsive */
         }
-      }
-    } else {
-      setActiveProject(null);
-    }
-  }, [activeProjectId]);
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: white;
+            font-weight: 500;
+            margin: 0;
+            padding: 0;
+            letter-spacing: -0.01em;
+        }
+            :root {
+                --edge-gap: 0.7vw; /* spacing equal to screen border - responsive */
+                --base-tracking: 0em; /* reference image uses neutral tracking */
+            }
+            body {
+                font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                background-color: white;
+                font-weight: 500;
+                margin: 0;
+                padding: 0;
+                letter-spacing: var(--base-tracking);
+            }
+        
+        h1, h2, h3, h4, h5, h6, p, span, button, li, a {
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
 
-  const handleLogoClick = () => {
-    setCurrentCategory('WORK');
-    setActiveProjectId(null);
-  };
+        /* Apply the same edge gap to the app root padding, but keep right edge flush with sidebar */
+        #root {
+            padding-top: var(--edge-gap);
+            padding-left: var(--edge-gap);
+            padding-bottom: var(--edge-gap);
+            padding-right: 0; /* allow images to reach the sidebar */
+        }
 
-  const handleCategoryChange = (cat: MenuCategory) => {
-    setCurrentCategory(cat);
-    if (cat === 'WORK') {
-      setActiveProjectId(PROJECTS[0].id);
-    } else {
-      setActiveProjectId(null);
-    }
-  };
+        /* Images container uses the same gap as the screen edge */
+        .images-column {
+            display: flex;
+            flex-direction: column;
+            /* Fill the available width of the main content so images sit flush against the sidebar */
+            width: 100%;
+            gap: var(--edge-gap);
+        }
 
-  const getImages = () => {
-    if (!activeProject) return [];
-    if (activeProject.id === '1-5-design-lab') {
-      return designLabImages;
-    }
-    return [activeProject.imageUrl];
-  };
+        .images-column .image-wrap {
+            width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            height: calc(100vh - var(--edge-gap));
+            padding: 0;
+            margin-bottom: 12vh;
+            overflow: visible;
+            pointer-events: none;
+        }
+        
+        .images-column .image-wrap img {
+            max-height: 100%;
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            pointer-events: auto; /* enable clicks only on images */
+        }
 
-  const images = getImages();
+        /* Pre-apply alignment for specific images to avoid layout shift */
+        img[data-align="right"] {
+            margin: 0 0 0 auto !important;
+        }
 
-  return (
-    <div className="w-screen h-screen bg-white p-[10px] overflow-hidden">
-      <div className="flex w-full h-full bg-white overflow-hidden">
-        <main 
-          ref={scrollContainerRef}
-          className="flex-1 relative overflow-y-auto bg-white scroll-smooth no-scrollbar"
-        >
-          {activeProject ? (
-            <div className="flex flex-col w-full">
-              {images.map((url, idx) => (
-                <div 
-                  key={idx} 
-                  className="w-full relative flex justify-center"
-                >
-                  <img 
-                    src={url} 
-                    alt={`${activeProject.title} ${idx}`}
-                    className="w-full h-auto block"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-white" />
-          )}
-        </main>
+        img[data-align="left"] {
+            margin: 0 auto 0 0 !important;
+        }
 
-        <Sidebar 
-          currentCategory={currentCategory}
-          onCategoryChange={handleCategoryChange}
-          projects={PROJECTS}
-          activeProjectId={activeProjectId || ''}
-          onProjectSelect={setActiveProjectId}
-          onLogoClick={handleLogoClick}
-        />
-      </div>
+        .image-wrap[data-overlap] {
+            margin-top: -40vh;
+        }
 
-      <style>{`
+        .image-wrap[data-overlap-large] {
+            margin-top: -50vh;
+        }
+        
+        /* Pre-apply alignment via justify-content on wrap */
+        .image-wrap[data-align="right"] {
+            justify-content: flex-end !important;
+        }
+        
+        .image-wrap[data-align="left"] {
+            justify-content: flex-start !important;
+        }
+        
+        /* 1-5 design lab specific styling */
+        .image-wrap[data-design-lab-2] {
+            justify-content: flex-start !important;
+            padding-left: 0 !important;
+        }
+        
+        .image-wrap[data-design-lab-2] .image-container {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+        
+        .image-wrap[data-design-lab-2] img {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+        
+        .image-wrap[data-design-lab-3] {
+            align-items: flex-end !important;
+            padding-bottom: 0 !important;
+        }
+        
+        .image-wrap[data-design-lab-3] .image-container {
+            align-self: flex-end !important;
+            margin-bottom: 0 !important;
+            display: flex !important;
+            align-items: flex-end !important;
+        }
+        
+        .image-wrap[data-design-lab-3] img {
+            margin-bottom: 0 !important;
+            align-self: flex-end !important;
+        }
+        
+        /* 1-5 design lab image 4 - align left edge with image 3's scaled left edge */
+        .image-wrap[data-design-lab-4] {
+            display: flex !important;
+            justify-content: flex-start !important;
+        }
+        
+        .image-wrap[data-design-lab-4] .image-container {
+            display: block !important;
+        }
+        
+        .image-wrap[data-design-lab-4] img {
+            display: block !important;
+        }
+
+        /* Image index number for editing reference */
+        .image-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .image-container img {
+            display: block;
+        }
+        
+        .image-index {
+            position: absolute;
+            bottom: 0.7vw;
+            left: 0.7vw;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.3vw 0.6vw;
+            font-size: 1vw;
+            font-weight: 500;
+            border-radius: 0.3vw;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Hero (first) image should cover and be cropped top/bottom equally */
+        .hero-img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center center !important;
+            display: block;
+        }
+        
+        /* Hero image container should fill the wrap */
+        .image-container.hero-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Sidebar typography adjustments to match reference layout */
+        .menu-item {
+            font-size: 0.7vw !important;
+            letter-spacing: -0.01em;
+            line-height: 1.3 !important;
+        }
+        .project-item {
+            font-size: 0.7vw !important;
+            letter-spacing: -0.01em;
+            line-height: 1.3 !important;
+        }
+            .menu-item {
+                font-size: 0.7vw !important;
+                letter-spacing: -0.01em;
+                line-height: 1.3 !important;
+                font-weight: 500 !important;
+            }
+            .project-item {
+                font-size: 0.7vw;
+                letter-spacing: -0.01em;
+                line-height: 1.3 !important;
+                margin-bottom: 0;
+                display: block;
+                font-weight: 500 !important;
+            }
+
+        /* Use Pretendard Medium as the default font and make non-bold the default
+           Preserve explicit weights via utility classes (.font-bold, .font-medium) */
+        body, h1, h2, h3, h4, h5, h6, p, span, button, li, a, #menu-list button, #project-list button, #project-details, nav, aside, header {
+            font-family: "Pretendard", "Pretendard Variable", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif !important;
+            font-weight: 500 !important; /* Pretendard Medium */
+            font-size: 0.7vw !important;
+            line-height: 1.3 !important;
+        }
+
+        /* Preserve explicit Tailwind utility weights where used */
+        .font-bold { font-weight: 700 !important; }
+        .font-medium { font-weight: 600 !important; }
+
+        /* Make main content smooth scrolling without auto-snap */
+        #main-content {
+            /* scroll-snap disabled - only snap on click */
+            -webkit-overflow-scrolling: touch;
+        }
         .no-scrollbar::-webkit-scrollbar {
-          display: none;
+            display: none;
         }
         .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-      `}</style>
-    </div>
-  );
-};
 
-export default App;
+        /* Very thin scrollbars: target ~1/10 of a typical default */
+        :root { --thin-scrollbar: 0.15vw; }
+
+        /* WebKit browsers (Chrome, Safari) */
+        ::-webkit-scrollbar { width: var(--thin-scrollbar); height: var(--thin-scrollbar); }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.35); border-radius: 999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.55); }
+
+        /* Firefox fallback */
+        * { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.35) transparent; }
+
+        /* Specific alignment gutter for text elements in sidebar */
+        .sidebar-content-gutter {
+            padding-left: 0;
+        }
+        /* Ensure sidebar's right padding matches the screen edge gap so text aligns flush with hero image */
+        #sidebar {
+            padding-right: 0 !important;
+        }
+
+        /* PPT-style layout override (force exact 75/25 split, no gap) */
+        /* Apply to the top-level flex container inside #root */
+        #root > .flex {
+            display: flex !important;
+            justify-content: flex-start !important; /* remove space-between behavior */
+            gap: 0px !important; /* remove gaps between main and sidebar */
+        }
+
+        /* Image area / main content: grow to fill available space */
+        #main-content {
+            flex: 1 1 auto !important;
+            width: auto !important;
+            max-width: none !important;
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar: keep original position and size */
+        #sidebar {
+            flex: 0 0 auto !important;
+            box-sizing: border-box;
+            padding-left: var(--edge-gap) !important; /* match white border thickness */
+            padding-right: var(--edge-gap) !important; /* add right padding to match white border */
+        }
+        /* Metadata inline label:value styling */
+        .meta-item { margin-bottom: 0; }
+        /* Use a single container gap so spacing between all meta items is uniform */
+        .meta-list { display: flex; flex-direction: column; gap: 16px; }
+            /* Use a single container gap so spacing between all meta items is uniform */
+            .meta-list { display: flex; flex-direction: column; gap: 0.85vw; }
+        /* Place multiple metadata items on a single row when needed */
+        .meta-row { display: flex; gap: 0.85vw; align-items: baseline; }
+        .meta-label { color: #000; margin-right: 0.4vw; }
+        .meta-value { color: #000; }
+        /* Typographic size rules - responsive viewport units */
+        /* Navigation category buttons (WORK / PRESS / CONTACT) */
+        #menu-list button, .menu-item { font-size: 1.3vw !important; font-weight: 500 !important; }
+        /* Project list items */
+        #project-list button, .project-item { font-size: 0.7vw !important; }
+        /* Active project title in details */
+        #project-details h2 { font-size: 1.3vw !important; font-weight: 500 !important; line-height: 1.0 !important; }
+        /* Project descriptions (Korean + English) */
+        #project-details .space-y-4 p { font-size: 0.7vw !important; color: #000 !important; line-height: 1.3 !important; }
+        /* Project metadata (프로젝트 정보) */
+        #project-details .meta-item, #project-details .meta-label, #project-details .meta-value {
+            font-size: 0.7vw !important;
+            color: #000 !important;
+            line-height: 1.3 !important;
+        }
+        
+        .active-menu {
+            opacity: 1;
+        }
+        .active-menu:hover {
+            opacity: 1 !important;
+        }
+        /* Keep inactive-looking buttons visually transparent */
+        .inactive-menu {
+            opacity: 0.5;
+        }
+        .inactive-menu:hover {
+            opacity: 1 !important;
+        }
+        .active-project {
+            opacity: 1;
+        }
+        .active-project:hover {
+            opacity: 1 !important;
+        }
+        .inactive-project {
+            opacity: 0.5;
+        }
+        .inactive-project:hover {
+            opacity: 1 !important;
+        }
+        
+        /* Ensure hidden class works properly */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Make contact-content flex when visible */
+        #contact-content:not(.hidden) {
+            display: flex !important;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+</head>
+<body class="bg-white text-black overflow-hidden">
+    <div id="root" class="w-screen h-screen overflow-hidden" style="padding: 0.7vw;">
+        <div class="flex w-full h-full bg-white overflow-hidden">
+            
+            <!-- MAIN CONTENT AREA -->
+            <main id="main-content" class="flex-1 relative overflow-y-auto overflow-x-hidden bg-white no-scrollbar">
+                <!-- Images will be injected here -->
+            </main>
+
+            <!-- SIDEBAR -->
+            <aside id="sidebar" class="w-[18%] h-full flex flex-col relative pt-0 border-l border-transparent select-none" style="min-width: 18vw; padding-right: 0.85vw; padding-bottom: 0.15vw; overflow: hidden;">
+                
+                <!-- LOGO (Always at top, aligned with text) -->
+                <header class="z-10" style="display: flex; justify-content: flex-start; flex-shrink: 0; margin-bottom: 1.25vw; margin-top: 0;">
+                    <button id="logo-btn" class="hover:opacity-70 transition-opacity outline-none p-0 border-none bg-transparent cursor-pointer" style="display: block; margin: 0; margin-left: 0;">
+                        <img id="logo-img" alt="StudioPinVice" style="height: 3.5vw; width: auto; display: block; margin: 0; object-fit: contain;" />
+                    </button>
+                </header>
+
+                <!-- NAVIGATION -->
+                <nav style="flex-shrink: 0; margin-bottom: 1.25vw; margin-top: 0;">
+                    <ul id="menu-list" class="space-y-0 p-0 m-0 list-none">
+                        <!-- WORK, PRESS, CONTACT injected here -->
+                    </ul>
+                </nav>
+
+                <!-- WORK CATEGORY CONTENT -->
+                <div id="work-content" class="flex-1 flex flex-col" style="min-height: 0; overflow: hidden;">
+                    <!-- PROJECT LIST - SCROLLABLE -->
+                    <div style="flex: 0 1 auto; overflow-y: auto; overflow-x: hidden; margin-bottom: 1.4vw; margin-top: 0;" class="no-scrollbar">
+                        <ul id="project-list" class="space-y-0 p-0 m-0 list-none">
+                            <!-- Project titles injected here -->
+                        </ul>
+                    </div>
+
+                    <!-- PROJECT DETAILS - SCROLLABLE (separate from project list) -->
+                    <div style="flex: 0 1 auto; overflow-y: auto; overflow-x: hidden; max-width: 24.5vw; margin-top: auto;" class="no-scrollbar">
+                        <div id="project-details" style="padding-top: 0; padding-bottom: 0;">
+                            <!-- Active project metadata injected here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTACT CATEGORY CONTENT (Hidden by default) -->
+                <div id="contact-content" class="hidden font-medium mt-2" style="font-size: 0.7vw; flex-direction: column; gap: 2.5vw; line-height: 1.3;">
+                    <div style="display: flex; flex-direction: column; gap: 0.35vw;">
+                        <div class="flex">
+                            <span class="tracking-tight">+82 (0) 10 3124 8695</span>
+                        </div>
+                        <div class="flex">
+                            <a href="mailto:info@studiopinvice.kr" class="hover:opacity-60 transition-opacity">info@studiopinvice.kr</a>
+                        </div>
+                        <div class="flex">
+                            <a href="https://instagram.com/studiopinvice" target="_blank" rel="noreferrer" class="hover:opacity-60 transition-opacity">@studiopinvice</a>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.1vw;" class="tracking-tight">
+                        <a href="https://www.google.com/maps/search/?api=1&query=StudioPinVice+172+Cheonggyecheon-ro+Jung-gu+Seoul" target="_blank" rel="noreferrer" class="hover:opacity-60 transition-opacity" style="text-decoration: none; color: inherit;">
+                            <p class="m-0 p-0">5F 172 Cheonggyecheon-ro</p>
+                            <p class="m-0 p-0">Jung-gu Seoul KR</p>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- PRESS CATEGORY CONTENT (Hidden by default) -->
+                <div id="press-content" class="hidden font-medium mt-2" style="font-size: 0.7vw;">
+                    <p class="opacity-50">No press items at the moment.</p>
+                </div>
+
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const PROJECTS = [
+            {
+                id: '1-5-design-lab',
+                title: '1-5 Design Lab Hannam',
+                type: 'Academy',
+                client: '1-5 Design Lab Hannam',
+                location: '서울 용산구 한남대로 59',
+                floorArea: '332.84m² (100.68PY)',
+                involvement: '컨셉 디자인, 시공',
+                date: '2025년 2월',
+                descriptionKo: '1-5 디자인 랩은 유럽과 미국의 명문 예술학교 입시를 준비하는 디자인 아카데미로 입시생의 작업 과정이 작품처럼 보일 수 있도록, 갤러리와 워크샵을 결합한 형태로 디자인 했습니다.',
+                descriptionEn: 'The 1-5 Design Lab is a design academy preparing for entrance exams to prestigious art schools in Europe and the United States, and it is designed in a combination of galleries and workshops so that the process of the applicants looks like a work.',
+                imageUrl: 'https://raw.githubusercontent.com/ai-studio-pro/assets/main/studio-pinvice/05.jpg'
+            },
+            {
+                id: 'mma-photo-booth',
+                title: 'MMA Photo Booth',
+                type: 'Installation',
+                client: 'Kakao entertainment',
+                location: '인천 중구 공항문화로 127, 인스파이어 아레나',
+                involvement: '컨셉 디자인, 제작',
+                date: '2024년 12월',
+                descriptionKo: '사일로랩과 협업하여 만든 본 모듈부스는 다회용으로 제작되었으며 행사에 맞게 여러 형태로 분해 조립이 가능합니다. 최초로 멜론뮤직 어워드의 아티스트 포토 부스로 사용 되었으며 이후 세미콘 코리아 도쿄 일렉트론 부스에 사용될 예정입니다.',
+                descriptionEn: 'Created in collaboration with Silo Lab, this module booth is multi-use and can be disassembled and assembled in several forms to suit the event. It was used as the artist photo booth at the Melon Music Awards for the first time, and will later be used for the Semicon Korea Tokyo Electron booth.',
+                imageUrl: ''
+            },
+            {
+                id: 'place-1-3-1-1-company',
+                title: 'Place 1-3 / 1-1 Company',
+                type: 'Retail Shop / Office',
+                client: 'Hyphen',
+                location: '서울 종로구 팔판길 23',
+                floorArea: '415.94㎡(125.28PY)',
+                involvement: '컨셉 디자인, 시공',
+                date: '2025년 4월',
+                descriptionKo: '주식회사 하이픈의 사옥을 디자인한 프로젝트로 사옥의 1층은 하이픈의 리테일 브랜드 Place1-3이 입점해 있습니다. 리테일 샵은 액자의 프레임을 컨셉으로 작업했습니다. 가구의 테두리와 안쪽에 그리드를 만들어 다량의 상품 진열 시에도 정돈된 분위기를 유지할 수 있습니다. 또한 중앙 선반을 도입해 스킵 플로어 구조의 단절을 보완하고 수직적 공간감을 확보했습니다.',
+                descriptionEn: 'It is a project that designed Hyphen\'s office building, and the first floor of the office building is home to Hyphen\'s retail brand Place 1-3. Retail Shop worked with the concept of framed frames. By creating grids on the edges and inside of furniture, you can maintain an organized atmosphere even when displaying large quantities of goods. It also introduced a center shelf to compensate for the disconnection of the skip floor structure and secure a sense of vertical space.',
+                imageUrl: ''
+            },
+            {
+                id: 'one-life-welfare-community-center',
+                title: 'One Life Welfare Community Center',
+                type: 'Complex',
+                client: 'One Life Welfare',
+                location: '경기도 안산시 신길동 1706',
+                floorArea: '328.82㎡(99.47PY)',
+                involvement: '컨셉 디자인, 시공',
+                date: '2025년 12월',
+                descriptionKo: '한생명복지재단의 복합문화센터를 디자인 했습니다. 한생명복지재단은 기독교 기반의 기부재단으로 미혼모 보호와 지원을 주된 사업으로 진행하는 비영리 단체입니다. 중앙 홀은 기독교적 상징과 모성을 모티브로 한 오브젝트를 배치하여 단체의 사회적 역할을 표현했습니다. 이어서 홍해와 언덕을 메타포로 활용하여 작업한 예배당과 자연물을 단순화시켜 표현한 어린이 도서관을 작업했습니다.',
+                descriptionEn: 'We designed the Korea Life Welfare Foundation\'s Multicultural Center. The Korea Life Welfare Foundation is a Christian-based donation foundation that is a non-profit organization whose main business is to protect and support single mothers. The central hall expressed the social role of the group by placing objects with Christian symbols and motherhood as motifs. Worked on a chapel using the Red Sea and hills as metaphors and a children\'s library that simplified and expressed natural objects.',
+                imageUrl: ''
+            },
+            {
+                id: 'korea-post-vip-lounge',
+                title: 'Korea Post VIP Lounge',
+                type: 'Manual Design',
+                client: 'Mastercard / Korea Post',
+                signage: '1-1Company',
+                involvement: '컨셉 디자인, 기본도면',
+                date: '2025년 8월',
+                descriptionKo: '우정사업본부 산하 우체국 예금의 VIP 라운지 메뉴얼 디자인을 진행했습니다. 기존의 우체국 예금의 브랜드 컬러인 노란색을 메이플 우드로 치환하여 고급스러운 무드로 재해석 했습니다. 또한 천정 몰딩을 우표의 테두리 형태로 고안하여 기존 우체국과의 시각적 연결성을 유지했습니다.',
+                descriptionEn: 'We conducted a VIP lounge manual design of post office deposits under the Post Office. Yellow, the brand color of the existing post office deposit, was replaced with maple wood to reinterpret it in a luxurious mood. Furthermore, the ceiling molding was designed in the form of a border of stamps to maintain visual connectivity with existing post offices.',
+                imageUrl: ''
+            },
+            {
+                id: 'unbannable-art-piece',
+                title: 'Unbannable Art Piece',
+                type: 'Installation',
+                client: 'Nike',
+                location: '서울 성동구 성수동2가 322-39',
+                size: '3200×750×65',
+                involvement: '컨셉 디자인, 제작',
+                date: '2025년 01월',
+                descriptionKo: '텔레포트와 협업하여 UNBANNABLE CELEBRATION PARTY의 아트피스를 제작했습니다. 성수에서 열린 UNBANNABLE CELEBRATION PARTY 행사는 나이키 조던이 지난 40년간 선사해 온 영향력을 기념하는 파티로, 기념일이라는 경계적 순간을 강조하기 위해 메인 슬로건의 테두리가 조명에 의해 반사되는 디자인을 고안했습니다.',
+                descriptionEn: 'In collaboration with Teleport, an art piece was created for the UNBANNABLE CELEBRATION PARTY. The UNBANNABLE CELEBRATION PARTY event in Seongsu is a party that celebrates Nike Jordan\'s influence over the past 40 years, with the design featuring the rim of the main slogan reflected by lighting to highlight the iconic moment of the anniversary.',
+                imageUrl: ''
+            },
+            {
+                id: 'module-booth-2-0',
+                title: 'Module Booth 2.0',
+                type: 'Installation',
+                client: 'Silo Lab.',
+                involvement: '컨셉 디자인, 실시도면',
+                date: '2025년 11월',
+                descriptionKo: '본 모듈은 SM 엔터테인먼트의 월드투어용 포토부스를 목적으로 고안되어 항공 및 해상운송, 적재에 용이하고, 현장에서 전문인력 없이 조립이 가능하도록 고안되었습니다. 또한 모듈내부는 LED조명 삽입이 가능하며 여러 행사에 적용가능 하도록 다양한 형태로 조립될 수 있습니다.',
+                descriptionEn: 'This module is designed for the purpose of SM Entertainment\'s world tour photo booth and is designed to facilitate air and sea transportation and loading, and to be assembled without professionals in the field. The LED lighting can also be inserted inside the module and can be assembled in various forms to be applied to various events.',
+                imageUrl: ''
+            },
+            {
+                id: 'sagittal-plane-of-a-chair',
+                title: 'Sagittal Plane of a Chair',
+                type: 'Furniture',
+                material: 'Concrete, Stainless steel',
+                size: '320×430×1500',
+                involvement: '컨셉 디자인, 제작',
+                date: '2024년 10월',
+                descriptionKo: '단면의 조형성을 탐구하며 고안한 가구로 해부학적 시상면으로 자른 형태의 의자를 제작했습니다. 의자는 척추와 직접적으로 닿지 않습니다.',
+                descriptionEn: 'Exploring the formality of the cross-section, this furniture is a chair cut in the form of an anatomical sagittal plane. The chair does not directly touch the spine.',
+                imageUrl: ''
+            }
+        ];
+
+        const designLabImages = [
+            '1.1-5/1-5Hannam00.jpg',
+            '1.1-5/1-5Hannam19.jpg',
+            '1.1-5/1-5Hannam21.jpg',
+            '1.1-5/1-5Hannam18.jpg',
+            '1.1-5/1-5Hannam15.jpg',
+            '1.1-5/1-5Hannam14.jpg',
+            '1.1-5/1-5Hannam11.jpg',
+            '1.1-5/1-5Hannam9.jpg',
+            '1.1-5/1-5Hannam4.jpg',
+            '1.1-5/1-5Hannam1.jpg',
+            '1.1-5/1-5Hannam20.jpg',
+            '1.1-5/1-5Hannam8.jpg',
+            '1.1-5/1-5Hannam10.jpg',
+            '1.1-5/1-5Hannam13.jpg',
+            '1.1-5/1-5Hannam2.jpg',
+            '1.1-5/1-5Hannam22.jpg'
+        ];
+
+        const mmaImages = [
+            '2.MMA/mma1.jpeg',
+            '2.MMA/mma2.png',
+            '2.MMA/mma6.jpeg',
+            '2.MMA/mma7.jpeg',
+            '2.MMA/mma9.jpeg',
+            '2.MMA/mma10.jpg',
+            '2.MMA/mma11.jpeg',
+            '2.MMA/mma12.jpg',
+            '2.MMA/mma13.jpeg',
+            '2.MMA/mma14.jpeg',
+            '2.MMA/mma15.jpeg',
+            '2.MMA/mma16.jpeg',
+            '2.MMA/mma17.png'
+        ];
+
+        const place13Images = [
+            '3.Place1-3/1-3Place1.jpg',
+            '3.Place1-3/1-3Place2.jpg',
+            '3.Place1-3/1-3Place3.jpg',
+            '3.Place1-3/1-3Place4.jpg',
+            '3.Place1-3/1-3Place6.jpg',
+            '3.Place1-3/1-3Place7.jpg',
+            '3.Place1-3/1-3Place10.jpg',
+            '3.Place1-3/1-3Place11.jpg',
+            '3.Place1-3/1-3Place12.jpg',
+            '3.Place1-3/1-3Place13.jpg',
+            '3.Place1-3/1-3Place14.jpg',
+            '3.Place1-3/1-3Place15.jpg',
+            '3.Place1-3/1-3Place16.jpg',
+            '3.Place1-3/1-3Place17.jpg',
+            '3.Place1-3/1-3Place19.jpg',
+            '3.Place1-3/1-3Place21.jpg',
+            '3.Place1-3/1-3Place26.jpg',
+            '3.Place1-3/1-3Place27.jpg',
+            '3.Place1-3/1-3Place28.png',
+            '3.Place1-3/1-3Place29.jpg',
+            '3.Place1-3/1-3Place30.png',
+            '3.Place1-3/1-3Place31.jpeg'
+        ];
+
+        const koreaPostImages = [
+            '5.KoreaPost/1.png',
+            '5.KoreaPost/2.png',
+            '5.KoreaPost/3.jpg',
+            '5.KoreaPost/4.jpg',
+            '5.KoreaPost/5.png',
+            '5.KoreaPost/6.png',
+            '5.KoreaPost/7.png',
+            '5.KoreaPost/8.png',
+            '5.KoreaPost/9.jpg',
+            '5.KoreaPost/10.jpg',
+            '5.KoreaPost/11.png',
+            '5.KoreaPost/12.png',
+            '5.KoreaPost/13.png',
+            '5.KoreaPost/14.jpg',
+            '5.KoreaPost/15.png'
+        ];
+
+        const unbannableImages = [
+            '6.Unbannable/Unbannable1.jpeg',
+            '6.Unbannable/Unbannable3.jpeg',
+            '6.Unbannable/Unbannable4.jpeg',
+            '6.Unbannable/Unbannable5.jpg',
+            '6.Unbannable/Unbannable2.png'
+        ];
+
+        const moduleBoothImages = [
+            '7.ModuleBooth2.0/PB2.0_1.png',
+            '7.ModuleBooth2.0/PB2.0_2.png',
+            '7.ModuleBooth2.0/PB2.0_3.png',
+            '7.ModuleBooth2.0/PB2.0_4.png',
+            '7.ModuleBooth2.0/PB2.0_5.png',
+            '7.ModuleBooth2.0/PB2.0_6.png',
+            '7.ModuleBooth2.0/PB2.0_7.png',
+            '7.ModuleBooth2.0/PB2.0_8.png',
+            '7.ModuleBooth2.0/PB2.0_9.png',
+            '7.ModuleBooth2.0/PB2.0_10.png',
+            '7.ModuleBooth2.0/PB2.0_11.png',
+            '7.ModuleBooth2.0/PB2.0_12.png'
+        ];
+
+        const sagittalImages = [
+            '8.Sagittal/Sagittal1.jpeg',
+            '8.Sagittal/Sagittal2.jpeg',
+            '8.Sagittal/Sagittal3.jpeg',
+            '8.Sagittal/Sagittal4.jpeg',
+            '8.Sagittal/Sagittal5.jpg',
+            '8.Sagittal/Sagittal6.jpg',
+            '8.Sagittal/Sagittal7.jpg',
+            '8.Sagittal/Sagittal8.jpg',
+            '8.Sagittal/Sagittal9.jpg',
+            '8.Sagittal/Sagittal10.jpg'
+        ];
+
+        const logoBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjAgNDAiIGZpbGw9ImJsYWNrIj48dGV4dCB4PSIyMTUiIHk9IjMwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iJ1ByZXRlbmRhcmQnLCAtQXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICdTZWdvZSBVSScsIFJvYm90bywgJ0hlbHZldGljYSBOZXVlJywgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI4MDAiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSItMC4wNWVtIj5TdHVkaW9QaW5WaWNlPC90ZXh0Pjwvc3ZnPg==";
+
+        // --- STATE ---
+        let currentCategory = null;
+        let activeProjectId = null;
+        let clickedProjectId = null; // track which project was clicked
+        let showHome = true; // when true, main content shows an empty home screen
+        let projectScrollPositions = {}; // store scroll position for each project
+
+        // --- DOM ELEMENTS ---
+        const mainContent = document.getElementById('main-content');
+        const menuList = document.getElementById('menu-list');
+        const projectList = document.getElementById('project-list');
+        const projectDetails = document.getElementById('project-details');
+        const logoBtn = document.getElementById('logo-btn');
+        const logoImg = document.getElementById('logo-img');
+        
+        const workSection = document.getElementById('work-content');
+        const pressSection = document.getElementById('press-content');
+        const contactSection = document.getElementById('contact-content');
+
+        // --- FUNCTIONS ---
+        
+        // Scroll to clicked image with smooth animation - center the image in viewport
+        window.scrollToImage = function(imgElement) {
+            const viewportHeight = window.innerHeight;
+            const imgRect = imgElement.getBoundingClientRect();
+            const imgCenterY = imgRect.top + imgRect.height / 2;
+            const scrollOffset = imgCenterY - viewportHeight / 2;
+            
+            mainContent.scrollBy({ top: scrollOffset, behavior: 'smooth' });
+        };
+        
+        function init() {
+            logoImg.src = '0.ETC/SPV_Logotype2.png';
+            renderMenu();
+            renderProjects();
+            updateUI();
+
+            // setup wheel paging
+            setupScrollSnapNavigation();
+
+            logoBtn.addEventListener('click', () => {
+                showHome = true;
+                currentCategory = null;
+                activeProjectId = null;
+                clickedProjectId = null;
+                renderMenu();
+                renderProjects();
+                updateUI();
+            });
+        }
+
+        function renderMenu() {
+            const categories = ['WORK', 'PRESS', 'CONTACT'];
+            menuList.innerHTML = categories.map(cat => `
+                <li class="leading-none">
+                    <button 
+                        onclick="setCategory('${cat}')"
+                        class="menu-item tracking-tighter transition-opacity hover:opacity-70 ${currentCategory === cat ? 'active-menu font-bold' : 'inactive-menu font-bold'} block w-full text-left p-0 border-none bg-transparent cursor-pointer"
+                        style="font-size: 0.7vw !important; line-height: 1.3 !important;"
+                    >
+                        ${cat}
+                    </button>
+                </li>
+            `).join('');
+        }
+
+        function renderProjects() {
+            projectList.innerHTML = PROJECTS.map(p => `
+                <li class="leading-none">
+                    <button 
+                        onclick="setActiveProject('${p.id}')"
+                        onmouseenter="hoverProject('${p.id}')"
+                        class="project-item text-left w-full transition-all ${activeProjectId === p.id ? 'active-project font-medium' : 'inactive-project font-medium'} p-0 border-none bg-transparent cursor-pointer"
+                        style="line-height: 1.3 !important;"
+                    >
+                        ${p.title}
+                    </button>
+                </li>
+            `).join('');
+            
+            // Add mouseleave handler to project list container to restore clicked project
+            projectList.onmouseleave = function() {
+                if (clickedProjectId) {
+                    activeProjectId = clickedProjectId;
+                    const currentScroll = mainContent.scrollTop;
+                    updateUI();
+                    mainContent.scrollTop = currentScroll; // preserve scroll position
+                }
+            };
+        }
+
+        window.setCategory = function(cat) {
+            currentCategory = cat;
+            showHome = false;
+            if (cat === 'WORK') {
+                // Show only the project list; do not open any project images yet
+                activeProjectId = null;
+                workSection.classList.remove('hidden');
+                pressSection.classList.add('hidden');
+                contactSection.classList.add('hidden');
+            } else if (cat === 'PRESS') {
+                activeProjectId = null;
+                workSection.classList.add('hidden');
+                pressSection.classList.remove('hidden');
+                contactSection.classList.add('hidden');
+            } else if (cat === 'CONTACT') {
+                activeProjectId = null;
+                workSection.classList.add('hidden');
+                pressSection.classList.add('hidden');
+                contactSection.classList.remove('hidden');
+            }
+            renderMenu();
+            renderProjects();
+            updateUI();
+        };
+
+        window.setActiveProject = function(id) {
+            // If clicking the same project again, scroll to top (hero image) with smooth animation
+            if (clickedProjectId === id) {
+                projectScrollPositions[id] = 0;
+                // Ensure all images are rendered before scrolling - longer delay for image-heavy projects
+                setTimeout(() => {
+                    mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+                    // Double-check scroll completed to top after animation
+                    setTimeout(() => {
+                        if (mainContent.scrollTop > 0) {
+                            mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                    }, 500);
+                }, 100);
+                return;
+            }
+            
+            // Save current scroll position before switching
+            if (clickedProjectId) {
+                projectScrollPositions[clickedProjectId] = mainContent.scrollTop;
+            }
+            
+            activeProjectId = id;
+            clickedProjectId = id; // save clicked project
+            showHome = false;
+            
+            // Get saved position before rendering
+            const savedPosition = projectScrollPositions[id] || 0;
+            
+            // First, set scroll to saved position to prevent any scroll motion
+            mainContent.scrollTop = savedPosition;
+            
+            // Then render - this will maintain the scroll position
+            renderProjects();
+            updateUI();
+            
+            // Ensure scroll position is maintained after DOM update
+            mainContent.scrollTop = savedPosition;
+        };
+
+        window.hoverProject = function(id) {
+            // Only allow hover to change images if no project is clicked
+            if (!clickedProjectId) {
+                activeProjectId = id;
+                updateUI();
+            }
+        };
+
+        // Adjust portrait (tall) images so their displayed height matches
+        // the height of landscape images in the same column.
+        function adjustTallImages() {
+            const imgs = Array.from(document.querySelectorAll('.images-column img'));
+            if (!imgs.length) return;
+
+            const loadPromises = imgs.map(img => new Promise(resolve => {
+                if (img.complete) return resolve(img);
+                img.addEventListener('load', () => resolve(img));
+                img.addEventListener('error', () => resolve(img));
+            }));
+
+            Promise.all(loadPromises).then(loaded => {
+                // Ensure every image fits inside the image-wrap height (viewport minus gaps)
+                const wrap = document.querySelector('.images-column .image-wrap');
+                const containerH = wrap ? wrap.clientHeight : 0;
+                if (!containerH) return;
+
+                loaded.forEach((img, idx) => {
+                    // skip hero images (they use cover)
+                    if (img.dataset && img.dataset.hero) return;
+                    
+                    const isPortrait = img.naturalHeight > img.naturalWidth;
+                    const projectId = img.closest('.images-column')?.parentElement?.dataset?.projectId;
+                    
+                    // Check if this is special images that are handled separately
+                    const imgSrc = img.getAttribute('src');
+                    const isDesignLab5 = imgSrc?.includes('1-5Hannam15.jpg'); // 1-5
+                    const isDesignLab6 = imgSrc?.includes('1-5Hannam14.jpg'); // 1-6
+                    const isUnbannable2 = imgSrc?.includes('Unbannable3.jpeg');
+                    const isUnbannable3 = imgSrc?.includes('Unbannable4.jpeg');
+                    const isUnbannable4 = imgSrc?.includes('Unbannable5.jpg');
+                    const isModuleBooth6 = imgSrc?.includes('PB2.0_6.png');
+                    const isModuleBooth7 = imgSrc?.includes('PB2.0_7.png');
+                    const isPlace13Image19 = imgSrc?.includes('1-3Place28.png');
+                    const isPlace13Image6 = imgSrc?.includes('1-3Place7.jpg'); // 3-6 is handled in special block
+                    
+                    // Skip 1-5 and 1-6 as they have their own inline height styling
+                    if (isDesignLab5 || isDesignLab6) {
+                        return;
+                    }
+                    
+                    img.style.maxHeight = containerH + 'px';
+                    img.style.maxWidth = '100%';
+                    
+                    // Special images already have CSS-based alignment, just set size
+                    // Skip 3-6 (Place7.jpg) as it's handled in its own special rendering block
+                    if (isPlace13Image6) {
+                        return; // Skip processing for 3-6
+                    }
+                    
+                    if (isUnbannable2 || isUnbannable3 || isUnbannable4 || isModuleBooth6 || isModuleBooth7 || isPlace13Image19) {
+                        img.style.width = 'auto';
+                        img.style.height = 'auto';
+                        if (isPlace13Image19) {
+                            img.parentElement.style.margin = '0';
+                        }
+                    } else if (isPortrait) {
+                        // Portrait: apply random-like margin offset to container
+                        img.style.width = 'auto';
+                        img.style.height = 'auto';
+                        
+                        // Generate pseudo-random margin using prime multipliers
+                        const seed = (idx * 17 + 13) % 11;
+                        const margins = [
+                            '0 0 0 0',      // center
+                            '0 0 0 8%',     // slight left
+                            '0 8% 0 0',     // slight right
+                            '0 0 0 15%',    // left
+                            '0 15% 0 0',    // right
+                            '0 0 0 20%',    // more left
+                            '0 20% 0 0',    // more right
+                            '0 5% 0 5%',    // center with padding
+                            '0 0 0 12%',    // left-ish
+                            '0 12% 0 0',    // right-ish
+                            '0 3% 0 7%',    // offset center-left
+                        ];
+                        img.parentElement.style.margin = margins[seed];
+                    } else {
+                        // Landscape: fill width, center alignment, no margin
+                        img.style.width = '100%';
+                        img.style.height = 'auto';
+                        img.parentElement.style.margin = '0';
+                    }
+                });
+            });
+        }
+
+        // Re-adjust tall images on window resize
+        window.addEventListener('resize', () => {
+            // debounce slightly
+            clearTimeout(window._adjustTallImagesTimer);
+            window._adjustTallImagesTimer = setTimeout(() => adjustTallImages(), 120);
+        });
+
+        // Smooth scrolling - no auto-snap, snap only on image click
+        function setupScrollSnapNavigation() {
+            // Remove wheel-based snap navigation
+            // Free scrolling is now enabled
+            // Snap will only happen when user clicks on an image
+        }
+
+        function updateUI() {
+            // If showing Home, hide project lists and sections
+            if (showHome) {
+                workSection.classList.add('hidden');
+                pressSection.classList.add('hidden');
+                contactSection.classList.add('hidden');
+            } else {
+                // Ensure the correct category section is visible when not on Home
+                if (currentCategory === 'WORK') {
+                    workSection.classList.remove('hidden');
+                    pressSection.classList.add('hidden');
+                    contactSection.classList.add('hidden');
+                } else if (currentCategory === 'PRESS') {
+                    workSection.classList.add('hidden');
+                    pressSection.classList.remove('hidden');
+                    contactSection.classList.add('hidden');
+                } else if (currentCategory === 'CONTACT') {
+                    workSection.classList.add('hidden');
+                    pressSection.classList.add('hidden');
+                    contactSection.classList.remove('hidden');
+                }
+            }
+
+            // Update Details
+            if (activeProjectId) {
+                const project = PROJECTS.find(p => p.id === activeProjectId);
+                const metadata = [
+                    { label: 'TYPE', value: project.type },
+                    { label: 'CLIENT', value: project.client },
+                    { label: 'MATERIAL', value: project.material },
+                    { label: 'LOCATION', value: project.location },
+                    { label: 'FLOOR AREA', value: project.floorArea },
+                    { label: 'SIZE', value: project.size },
+                    { label: 'SIGNAGE', value: project.signage },
+                    { label: 'INVOLVEMENT', value: project.involvement },
+                    { label: 'DATE', value: project.date },
+                ].filter(item => item.value);
+
+                // Render metadata each on its own line (Type and Client separated)
+                projectDetails.innerHTML = `
+                    <div style="display: flex; flex-direction: column; gap: 24px;">
+                        <div style="display: flex; flex-direction: column; gap: 0px;">
+                            ${metadata.map(item => `
+                                <div class="meta-item">
+                                    <span class="meta-label">${item.label.toLowerCase().replace(/^./, s => s.toUpperCase())}:</span>
+                                    <span class="meta-value">${item.value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="space-y-4" style="display: flex; flex-direction: column; gap: 16px;">
+                            <p style="margin: 0; padding: 0; text-align: justify;">${project.descriptionKo}</p>
+                            <p style="margin: 0; padding: 0; text-align: justify; line-height: 1.15 !important;">${project.descriptionEn}</p>
+                        </div>
+                    </div>
+                `;
+                projectDetails.classList.remove('hidden');
+            } else {
+                projectDetails.innerHTML = '';
+                projectDetails.classList.add('hidden');
+            }
+
+            // Home screen: show empty main content when showHome === true
+            if (showHome) {
+                mainContent.innerHTML = '<div class="w-full h-full flex items-center justify-center bg-white"></div>';
+                mainContent.scrollTop = 0;
+                projectDetails.classList.add('hidden');
+            }
+
+            // Update Main Content Images
+            else if (activeProjectId) {
+                const project = PROJECTS.find(p => p.id === activeProjectId);
+                let imgs = [];
+                if (project.id === '1-5-design-lab') {
+                    imgs = designLabImages;
+                } else if (project.id === 'mma-photo-booth') {
+                    imgs = mmaImages;
+                } else if (project.id === 'place-1-3-1-1-company') {
+                    imgs = place13Images;
+                } else if (project.id === 'korea-post-vip-lounge') {
+                    imgs = koreaPostImages;
+                } else if (project.id === 'unbannable-art-piece') {
+                    imgs = unbannableImages;
+                } else if (project.id === 'module-booth-2-0') {
+                    imgs = moduleBoothImages;
+                } else if (project.id === 'sagittal-plane-of-a-chair') {
+                    imgs = sagittalImages;
+                } else if (project.imageUrl) {
+                    imgs = [project.imageUrl];
+                } else {
+                    imgs = []; // no images available
+                }
+
+                mainContent.innerHTML = `
+                    <div class="images-column">
+                                ${imgs.map((url, idx) => {
+                                    // Special handling for 3-11 - crop top/bottom 100px and scale 120%
+                                    if (project.id === 'place-1-3-1-1-company' && idx === 10) {
+                                        const img11 = imgs[10];
+                                        return `
+                                        <div class="image-wrap" data-align="right" style="overflow: hidden; cursor: default;">
+                                            <div class="image-container" style="overflow: hidden; width: auto; height: calc(100vh - var(--edge-gap) - 200px); display: flex; align-items: center; justify-content: flex-end;">
+                                                <img 
+                                                    src="${img11}" 
+                                                    alt="${project.title} 11"
+                                                    style="height: 120%; width: auto; object-fit: cover; display: block; margin: 0 0 0 auto; cursor: pointer;"
+                                                    loading="eager"
+                                                    data-align="right"
+                                                    onclick="scrollToImage(this)"
+                                                />
+                                                <div class="image-index">3-11</div>
+                                            </div>
+                                        </div>
+                                        `;
+                                    }
+                                    
+                                    // Special handling for 3-6 - align left, scale 1.25x from top-left
+                                    if (project.id === 'place-1-3-1-1-company' && idx === 5) {
+                                        const img6 = imgs[5];
+                                        return `
+                                        <div class="image-wrap" style="overflow: visible; padding-left: 0 !important; justify-content: flex-start !important; align-items: flex-start !important; cursor: default;">
+                                            <div class="image-container" style="overflow: visible; margin: 0 !important; width: auto; height: auto; display: block;">
+                                                <img 
+                                                    src="${img6}" 
+                                                    alt="${project.title} 6"
+                                                    style="height: calc(100vh - var(--edge-gap)); width: auto; object-fit: contain; display: block; transform: scale(1.25); transform-origin: top left; margin: 0 !important; cursor: pointer;"
+                                                    loading="eager"
+                                                    onclick="scrollToImage(this)"
+                                                />
+                                                <div class="image-index">3-6</div>
+                                            </div>
+                                        </div>
+                                        `;
+                                    }
+                                    
+                                    // Special handling for 3-17 - split into top and bottom views
+                                    if (project.id === 'place-1-3-1-1-company' && idx === 16) {
+                                        const img17 = imgs[16];
+                                        return `
+                                        <div class="image-wrap" style="overflow: hidden; cursor: default;">
+                                            <div class="image-container" style="overflow: hidden; width: 100%; height: 100%;">
+                                                <img 
+                                                    src="${img17}" 
+                                                    alt="${project.title} 17 top"
+                                                    style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: none; cursor: pointer;"
+                                                    loading="eager"
+                                                    onclick="scrollToImage(this)"
+                                                />
+                                                <div class="image-index">3-17 (상단)</div>
+                                            </div>
+                                        </div>
+                                        <div class="image-wrap" style="overflow: visible; display: flex; justify-content: center; align-items: flex-end; cursor: default;">
+                                            <div class="image-container" style="overflow: visible; display: flex; justify-content: center; align-items: flex-end;">
+                                                <img 
+                                                    src="${img17}" 
+                                                    alt="${project.title} 17 bottom"
+                                                    style="height: calc(100vh - var(--edge-gap)); width: auto; object-fit: contain; display: block; transform: translateX(-200px) scale(1.5); transform-origin: bottom center; cursor: pointer;"
+                                                    loading="eager"
+                                                    onclick="scrollToImage(this)"
+                                                />
+                                                <div class="image-index">3-17 (하단)</div>
+                                            </div>
+                                        </div>
+                                        `;
+                                    }
+                                    
+                                    // 1-5 and 1-6 now render individually like other images
+                                    
+                                    // Skip 1-6 as it will be rendered together with 1-5
+                                    if (project.id === '1-5-design-lab' && idx === 5) {
+                                        return '';
+                                    }
+                                    
+                                    // Special handling for 1-5 and 1-6 - render them side by side
+                                    if (project.id === '1-5-design-lab' && idx === 4) {
+                                        const img5 = imgs[4];
+                                        const img6 = imgs[5];
+                                        return `
+                                        <div class="image-wrap" style="display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: stretch !important; gap: 0.7vw !important; padding: 0 !important; height: calc(100vh - var(--edge-gap)) !important;">
+                                            <div class="image-container" style="flex: 1 !important; display: flex !important; justify-content: flex-start !important; align-items: stretch !important; height: 100% !important;">
+                                                <img 
+                                                    src="${img5}" 
+                                                    alt="${project.title} 5"
+                                                    data-align="left"
+                                                    style="height: 100% !important; width: auto !important; object-fit: contain !important; cursor: pointer !important; display: block !important;"
+                                                    loading="eager"
+                                                    onclick="scrollToImage(this)"
+                                                />
+                                                <div class="image-index">1-5</div>
+                                            </div>
+                                            <div class="image-container" style="flex: 1 !important; display: flex !important; justify-content: flex-end !important; align-items: stretch !important; height: 100% !important;">
+                                                <img 
+                                                    src="${img6}" 
+                                                    alt="${project.title} 6"
+                                                    data-align="right"
+                                                    style="height: 100% !important; width: auto !important; object-fit: contain !important; cursor: pointer !important; display: block !important;"
+                                                    loading="eager"
+                                                    onclick="scrollToImage(this)"
+                                                />
+                                                <div class="image-index">1-6</div>
+                                            </div>
+                                        </div>
+                                        `;
+                                    }
+                                    
+                                    // Special handling for last image of unbannable project
+                                    const isUnbannableLast = project.id === 'unbannable-art-piece' && idx === imgs.length - 1;
+                                    // Special handling for sagittal project image 3 (idx 2) - flip horizontally
+                                    const isSagittal3 = project.id === 'sagittal-plane-of-a-chair' && idx === 2;
+                                    // Special handling for korea post image 10 (idx 9) - rotate 90deg
+                                    const isKoreaPost10 = project.id === 'korea-post-vip-lounge' && idx === 9;
+                                    // Special handling for 1-5 design lab image 3 (idx 2) - scale 1.35
+                                    const isDesignLab3 = project.id === '1-5-design-lab' && idx === 2;
+                                    // Special handling for 1-5 design lab image 2 (idx 1) - stick to left
+                                    const isDesignLab2 = project.id === '1-5-design-lab' && idx === 1;
+                                    // Special handling for 1-5 design lab image 4 (idx 3) - align with image 3
+                                    const isDesignLab4 = project.id === '1-5-design-lab' && idx === 3;
+                                    // Special handling for 1-5 design lab image 7 (idx 6) - move right
+                                    const isDesignLab7 = project.id === '1-5-design-lab' && idx === 6;
+                                    // Special handling for 1-5 design lab image 8 (idx 7) - move left
+                                    const isDesignLab8 = project.id === '1-5-design-lab' && idx === 7;
+                                    // Special handling for place 1-3 image 20 (idx 19) - reduce size by 40%
+                                    const isPlace13Image20 = project.id === 'place-1-3-1-1-company' && idx === 19;
+                                    // Special handling for place 1-3 image 3 (idx 2) - reduce size by 10%
+                                    const isPlace13Image3 = project.id === 'place-1-3-1-1-company' && idx === 2;
+                                    // Special handling for place 1-3 image 5 (idx 4) - reduce size by 10%
+                                    const isPlace13Image5 = project.id === 'place-1-3-1-1-company' && idx === 4;
+                                    // Special handling for place 1-3 image 11 (idx 10) - crop top/bottom 100px and scale 120%
+                                    const isPlace13Image11 = project.id === 'place-1-3-1-1-company' && idx === 10;
+                                    // Special handling for place 1-3 image 12 (idx 11) - move right 50px
+                                    const isPlace13Image12 = project.id === 'place-1-3-1-1-company' && idx === 11;
+                                    // Special handling for place 1-3 image 19 (idx 18) - center align
+                                    const isPlace13Image19 = project.id === 'place-1-3-1-1-company' && idx === 18;
+                                    
+                                    let scaleStyle = '';
+                                    if (isUnbannableLast) {
+                                        scaleStyle = '';
+                                    } else if (isKoreaPost10) {
+                                        scaleStyle = 'transform: rotate(90deg);';
+                                    } else if (isDesignLab3) {
+                                        scaleStyle = 'transform: scale(1.3); transform-origin: bottom right; margin-right: 30%;';
+                                    } else if (isDesignLab2) {
+                                        scaleStyle = '';
+                                    } else if (isDesignLab4) {
+                                        scaleStyle = '';
+                                    } else if (isDesignLab7) {
+                                        scaleStyle = '';
+                                    } else if (isDesignLab8) {
+                                        scaleStyle = '';
+                                    } else if (isPlace13Image20) {
+                                        scaleStyle = 'transform: scale(0.6); transform-origin: center;';
+                                    } else if (isPlace13Image3 || isPlace13Image5) {
+                                        scaleStyle = 'transform: scale(0.9); transform-origin: center;';
+                                    } else if (isPlace13Image12) {
+                                        scaleStyle = 'margin-left: 50px;';
+                                    } else if (isPlace13Image11) {
+                                        scaleStyle = 'transform: scale(1.2); transform-origin: center; object-fit: cover; object-position: center center; height: calc(100% - 200px);';
+                                    }
+                                    
+                                    // Pre-set data attributes for instant alignment
+                                    let wrapAttrs = '';
+                                    let imgAttrs = '';
+                                    let wrapAlign = '';
+                                    
+                                    if (project.id === 'unbannable-art-piece') {
+                                        if (idx === 1) {
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                        if (idx === 2) {
+                                            wrapAttrs = 'data-overlap';
+                                            imgAttrs = 'data-align="left"';
+                                            wrapAlign = 'data-align="left"';
+                                        }
+                                        if (idx === 3) {
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                    } else if (project.id === 'module-booth-2-0') {
+                                        if (idx === 5) {
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                        if (idx === 6) {
+                                            wrapAttrs = 'data-overlap-large';
+                                            imgAttrs = 'data-align="left"';
+                                            wrapAlign = 'data-align="left"';
+                                        }
+                                    } else if (project.id === 'sagittal-plane-of-a-chair') {
+                                        if (idx === 0) {
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                        if (idx === 1) {
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                        if (idx === 2) {
+                                            wrapAttrs = 'data-overlap';
+                                            imgAttrs = 'data-align="left"';
+                                            wrapAlign = 'data-align="left"';
+                                        }
+                                    } else if (project.id === 'korea-post-vip-lounge') {
+                                        if (idx === 14) {
+                                            imgAttrs = 'data-align="left"';
+                                            wrapAlign = 'data-align="left"';
+                                        }
+                                    } else if (project.id === 'place-1-3-1-1-company') {
+                                        if (idx === 1) {
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                        if (idx === 2) {
+                                            imgAttrs = 'data-align="left"';
+                                            wrapAlign = 'data-align="left"';
+                                        }
+                                        if (idx === 4) {
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                        // idx === 5 (3-6) is handled in special case block above - skip here
+                                        if (idx === 6) {
+                                            wrapAttrs = 'data-overlap';
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                        if (idx === 10) {
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                        if (idx === 11) {
+                                            wrapAttrs = 'data-overlap';
+                                            imgAttrs = 'data-align="left"';
+                                            wrapAlign = 'data-align="left"';
+                                        }
+                                        if (idx === 15) {
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                    } else if (project.id === '1-5-design-lab') {
+                                        if (idx === 1) {
+                                            wrapAttrs = 'data-design-lab-2';
+                                        }
+                                        if (idx === 2) {
+                                            wrapAttrs = 'data-overlap data-design-lab-3';
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                        if (idx === 3) {
+                                            wrapAttrs = 'data-design-lab-4';
+                                        }
+                                        if (idx === 4) {
+                                            imgAttrs = 'data-align="left"';
+                                            wrapAlign = 'data-align="left"';
+                                        }
+                                        if (idx === 5) {
+                                            imgAttrs = 'data-align="right"';
+                                            wrapAlign = 'data-align="right"';
+                                        }
+                                        if (idx === 6) {
+                                            imgAttrs = 'data-align="left"';
+                                            wrapAlign = 'data-align="left"';
+                                        }
+                                        if (idx === 7) {
+                                            imgAttrs = 'data-align="left"';
+                                            wrapAlign = 'data-align="left"';
+                                        }
+                                    }
+                                    
+                                    // Combine wrap attributes
+                                    if (wrapAlign) {
+                                        wrapAttrs = wrapAttrs ? `${wrapAttrs} ${wrapAlign}` : wrapAlign;
+                                    }
+                                    
+                                    // Map project ID to project number
+                                    const projectNumbers = {
+                                        '1-5-design-lab': 1,
+                                        'mma-photo-booth': 2,
+                                        'place-1-3-1-1-company': 3,
+                                        'one-life-welfare': 4,
+                                        'korea-post-vip-lounge': 5,
+                                        'unbannable-art-piece': 6,
+                                        'module-booth-2-0': 7,
+                                        'sagittal-plane-of-a-chair': 8
+                                    };
+                                    const projectNum = projectNumbers[project.id] || '';
+                                    const imageLabel = `${projectNum}-${idx + 1}`;
+                                    
+                                    // Use eager loading for all images to prevent layout issues
+                                    const loadingStrategy = 'eager';
+                                    
+                                    return `
+                                    <div class="image-wrap" ${wrapAttrs} style="cursor: default;">
+                                        <div class="image-container ${idx === 0 && project.id !== 'sagittal-plane-of-a-chair' ? 'hero-container' : ''}">
+                                            <img 
+                                                src="${url}" 
+                                                alt="${project.title} ${idx}"
+                                                ${idx === 0 ? (project.id === 'sagittal-plane-of-a-chair' ? `class="w-auto h-auto block" ${imgAttrs} style="cursor: pointer;" onclick="scrollToImage(this)"` : 'data-hero="true" class="hero-img" style="cursor: pointer;" onclick="scrollToImage(this)"') : `class="w-full h-auto block" ${imgAttrs} style="${scaleStyle} cursor: pointer;" onclick="scrollToImage(this)"`}
+                                                loading="${loadingStrategy}"
+                                            />
+                                            <div class="image-index">${imageLabel}</div>
+                                        </div>
+                                    </div>
+                                `}).join('')}
+                    </div>
+                `;
+                mainContent.scrollTop = 0;
+                
+                // Force immediate layout calculation for special images
+                requestAnimationFrame(() => {
+                    adjustTallImages();
+                });
+            } else {
+                mainContent.innerHTML = '<div class="w-full h-full flex items-center justify-center bg-white" />';
+            }
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
+
